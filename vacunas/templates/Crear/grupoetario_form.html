@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block title %}Crear Grupo Etario{% endblock %}
+
+{% block content %}
+<h2>Registrar Grupo Etario</h2>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Guardar</button>
+</form>
+{% endblock %}
