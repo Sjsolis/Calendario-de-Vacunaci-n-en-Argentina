@@ -4,15 +4,66 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Mi página de Vacunas{% endblock %}</title>
+    {% load static %}
+    <style>
+    
+       header {
+    padding: 10px 20px;
+    background-color: #f0f0f0;
+}
+
+.logo-titulo {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.logo-titulo img {
+    height: 60px;
+    width: auto;
+}
+
+.logo-titulo h1 {
+    margin-left: 15px;
+    font-size: 1.8em;
+}
+
+nav a {
+    text-decoration: none;
+    color: #333;
+    margin-right: 15px;
+}
+
+nav a:hover {
+    text-decoration: underline;
+}
+
+@media (max-width: 600px) {
+    .logo-titulo h1 {
+        font-size: 1.4em;
+    }
+    nav {
+        width: 100%;
+    }
+    nav a {
+        display: block;
+        margin: 5px 0;
+    }
+}
+    </style>
 </head>
 <body>
     <header>
-        <h1>Calendario Nacional de Vacunación</h1>
+        <div class="logo-titulo">
+            <img src="{% static 'img/logo calendario.png' %}" alt="Logo Calendario">
+            <h1>Calendario Nacional de Vacunación</h1>
+        </div>
+
         <nav>
-            <a href="{% url 'inicio' %}">Inicio</a> |
-            <a href="{% url 'crear_enfermedad' %}">Agregar Enfermedad</a> |
-            <a href="{% url 'crear_grupoetario' %}">Agregar Grupo Etario</a> |
-            <a href="{% url 'crear_vacuna' %}">Agregar Vacuna</a> |
+            <a href="{% url 'inicio' %}">Inicio</a>
+            <a href="{% url 'crear_enfermedad' %}">Agregar Enfermedad</a>
+            <a href="{% url 'crear_grupoetario' %}">Agregar Grupo Etario</a>
+            <a href="{% url 'vacuna_create' %}">Agregar Vacuna</a>
             <a href="{% url 'buscar_vacuna' %}">Buscar Vacuna</a>
         </nav>
     </header>
@@ -20,7 +71,7 @@
 
     <main>
         {% block content %}
-        <!-- Aquí va el contenido específico de cada página -->
+       
         {% endblock %}
     </main>
 

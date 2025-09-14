@@ -1,9 +1,7 @@
-{% extends 'base.html' %}
-
-{% block title %}Buscar Vacuna{% endblock %}
+{% extends "base.html" %}
+{% load static %}
 
 {% block content %}
-<h2>Buscar Vacuna</h2>
 <form method="get">
     {{ form.as_p }}
     <button type="submit">Buscar</button>
@@ -11,12 +9,19 @@
 
 {% if resultados %}
     <h3>Resultados:</h3>
-    <ul>
+    <ul style="list-style: none; padding-left: 0;">
         {% for vacuna in resultados %}
-            <li>{{ vacuna.nombre }} - {{ vacuna.grupo_etario }}</li>
+            <li style="display: flex; align-items: center; margin-bottom: 10px;">
+                {% if vacuna.imagen %}
+                    <img src="{{ vacuna.imagen.url }}" alt="{{ vacuna.nombre }}" width="50" style="margin-right: 10px;">
+                {% else %}
+                    <img src="{% static 'img/default.png' %}" alt="Sin imagen" width="50" style="margin-right: 10px;">
+                {% endif %}
+                <span>{{ vacuna.nombre }} - {{ vacuna.grupo_etario.nombre }}</span>
+            </li>
         {% endfor %}
     </ul>
-{% elif request.GET.nombre %}
-    <p>No se encontraron vacunas con ese nombre.</p>
+{% else %}
+    <p>No se encontraron vacunas{% if request.GET.nombre %} con ese nombre{% endif %}.</p>
 {% endif %}
 {% endblock %}

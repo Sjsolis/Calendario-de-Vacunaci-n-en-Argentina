@@ -1,13 +1,19 @@
-from django.shortcuts import render, redirect 
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from django.urls import reverse_lazy
+
 from .forms import EnfermedadForm, GrupoEtarioForm, VacunaForm, BusquedaVacunaForm
 from .models import Vacuna
 
+# vista inicio (sigue existiendo)
+def inicio(request):
+    return render(request, 'inicio/inicio.html')
 
-def inicio (request):
-    return render (request, 'inicio/inicio.html')
-    #return HttpResponse('<h2>Vacunas del Calendario</h2>')
-    
+# decorador en view función (ejemplo)
+@login_required
 def crear_enfermedad(request):
     if request.method == 'POST':
         form = EnfermedadForm(request.POST)
@@ -18,6 +24,59 @@ def crear_enfermedad(request):
         form = EnfermedadForm()
     return render(request, 'crear/enfermedad_form.html', {'form': form})
 
+# búsqueda con mensaje si no encuentra
+def buscar_vacuna(request):
+    resultados = []
+    mensaje = ''
+    if request.method == 'GET':
+        form = BusquedaVacunaForm(request.GET)
+        if form.is_valid():
+            nombre = form.cleaned_data['nombre']
+            resultados = Vacuna.objects.filter(nombre__icontains=nombre)
+            if not resultados:
+                mensaje = 'No se encontraron vacunas con ese nombre.'
+    else:
+        form = BusquedaVacunaForm()
+    return render(request, 'buscar.html', {'form': form, 'resultados': resultados, 'mensaje': mensaje})
+
+# CUSTOM MIXIN: permite sólo staff (ejemplo de mixin propio)
+class StaffRequiredMixin(UserPassesTestMixin):
+    def test_func(self):
+        return self.request.user.is_staff
+
+# CBVs (mínimo 2)
+class VacunaListView(ListView):
+    model = Vacuna
+    template_name = 'vacunas/vacuna_list.html'
+    context_object_name = 'vacunas'
+    paginate_by = 20
+
+class VacunaDetailView(DetailView):
+    model = Vacuna
+    template_name = 'vacunas/vacuna_detail.html'
+
+# Create/Update/Delete con mixin (ejemplo: sólo staff puede crear/editar/borrar)
+class VacunaCreateView(LoginRequiredMixin, StaffRequiredMixin, CreateView):
+    model = Vacuna
+    form_class = VacunaForm
+    template_name = 'crear/vacuna_form.html'
+    success_url = reverse_lazy('vacuna_list')
+
+class VacunaUpdateView(LoginRequiredMixin, StaffRequiredMixin, UpdateView):
+    model = Vacuna
+    form_class = VacunaForm
+    template_name = 'crear/vacuna_form.html'
+    success_url = reverse_lazy('vacuna_list')
+
+class VacunaDeleteView(LoginRequiredMixin, StaffRequiredMixin, DeleteView):
+    model = Vacuna
+    template_name = 'vacunas/vacuna_confirm_delete.html'
+    success_url = reverse_lazy('vacuna_list')
+    
+def about(request):
+    return render(request, 'about.html')
+
+@login_required
 def crear_grupoetario(request):
     if request.method == 'POST':
         form = GrupoEtarioForm(request.POST)
@@ -28,25 +87,3 @@ def crear_grupoetario(request):
         form = GrupoEtarioForm()
     return render(request, 'crear/grupoetario_form.html', {'form': form})
 
-def crear_vacuna(request):
-    if request.method == 'POST':
-        form = VacunaForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('inicio')
-    else:
-        form = VacunaForm()
-    return render(request, 'crear/vacuna_form.html', {'form': form})
-
-def buscar_vacuna(request):
-    resultados = []
-    if request.method == 'GET':
-        form = BusquedaVacunaForm(request.GET)
-        if form.is_valid():
-            nombre = form.cleaned_data['nombre']
-            resultados = Vacuna.objects.filter(nombre__icontains=nombre)
-    else:
-        form = BusquedaVacunaForm()
-    return render(request, 'buscar.html', {'form': form, 'resultados': resultados})
-
-    

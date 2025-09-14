@@ -1,10 +1,19 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}Inicio{% endblock %}
 
 {% block content %}
-<h2>Vacunados en Argentina</h2>
-<p>Bienvenido a la página de registro de vacunas.</p>
+<div style="text-align: center; margin-top: 20px;">
+<img src="{% static 'img/calendario_nacional_vacunacion2025.jpg' %}" 
+     alt="Calendario de Vacunación" width="1200">
+    <h2>Vacunados en Argentina</h2>
+    <p>Bienvenido a la página de registro de vacunas.</p>
+</div>
 {% endblock %}
+
+
+
+
 
 
