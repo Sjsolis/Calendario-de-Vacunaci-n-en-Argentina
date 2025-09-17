@@ -17,7 +17,12 @@
                 {% else %}
                     <img src="{% static 'img/default.png' %}" alt="Sin imagen" width="50" style="margin-right: 10px;">
                 {% endif %}
-                <span>{{ vacuna.nombre }} - {{ vacuna.grupo_etario.nombre }}</span>
+                
+                <!-- 🔗 Ahora el nombre de la vacuna es un link al detalle -->
+                <a href="{% url 'vacuna_detail' vacuna.id %}" style="text-decoration: none; color: inherit;">
+                    {{ vacuna.nombre }}
+                </a>
+                – {{ vacuna.grupo_etario.nombre }}
             </li>
         {% endfor %}
     </ul>

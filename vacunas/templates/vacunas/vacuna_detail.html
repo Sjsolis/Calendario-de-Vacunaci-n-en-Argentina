@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block title %}Detalle de {{ object.nombre }}{% endblock %}
+
+{% block content %}
+  <h2>{{ object.nombre }}</h2>
+
+  {% if object.imagen %}
+    <img src="{{ object.imagen.url }}" alt="{{ object.nombre }}" width="200">
+  {% endif %}
+
+  <p><strong>Fabricante:</strong> {{ object.fabricante }}</p>
+  <p><strong>Descripción:</strong> {{ object.descripcion_corta }}</p>
+  <p><strong>Grupo Etario:</strong> {{ object.grupo_etario }}</p>
+  <p><strong>Dosis:</strong> {{ object.dosis }}</p>
+  <p><strong>Previene:</strong>
+    {% for enf in object.enfermedades_previene.all %}
+      {{ enf.nombre }}{% if not forloop.last %}, {% endif %}
+    {% empty %}
+      Ninguna enfermedad registrada
+    {% endfor %}
+  </p>
+
+  <a href="{% url 'vacuna_list' %}">← Volver al listado</a>
+{% endblock %}

@@ -8,11 +8,9 @@ from django.urls import reverse_lazy
 from .forms import EnfermedadForm, GrupoEtarioForm, VacunaForm, BusquedaVacunaForm
 from .models import Vacuna
 
-# vista inicio (sigue existiendo)
 def inicio(request):
     return render(request, 'inicio/inicio.html')
 
-# decorador en view función (ejemplo)
 @login_required
 def crear_enfermedad(request):
     if request.method == 'POST':
@@ -24,7 +22,6 @@ def crear_enfermedad(request):
         form = EnfermedadForm()
     return render(request, 'crear/enfermedad_form.html', {'form': form})
 
-# búsqueda con mensaje si no encuentra
 def buscar_vacuna(request):
     resultados = []
     mensaje = ''
@@ -39,12 +36,10 @@ def buscar_vacuna(request):
         form = BusquedaVacunaForm()
     return render(request, 'buscar.html', {'form': form, 'resultados': resultados, 'mensaje': mensaje})
 
-# CUSTOM MIXIN: permite sólo staff (ejemplo de mixin propio)
 class StaffRequiredMixin(UserPassesTestMixin):
     def test_func(self):
         return self.request.user.is_staff
 
-# CBVs (mínimo 2)
 class VacunaListView(ListView):
     model = Vacuna
     template_name = 'vacunas/vacuna_list.html'
@@ -55,7 +50,6 @@ class VacunaDetailView(DetailView):
     model = Vacuna
     template_name = 'vacunas/vacuna_detail.html'
 
-# Create/Update/Delete con mixin (ejemplo: sólo staff puede crear/editar/borrar)
 class VacunaCreateView(LoginRequiredMixin, StaffRequiredMixin, CreateView):
     model = Vacuna
     form_class = VacunaForm
@@ -74,7 +68,7 @@ class VacunaDeleteView(LoginRequiredMixin, StaffRequiredMixin, DeleteView):
     success_url = reverse_lazy('vacuna_list')
     
 def about(request):
-    return render(request, 'about.html')
+    return render(request, 'vacunas/about.html')
 
 @login_required
 def crear_grupoetario(request):
