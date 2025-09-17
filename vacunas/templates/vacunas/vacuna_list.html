@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Listado de Vacunas</h1>
+<ul>
+  {% for vacuna in object_list %}
+    <li><a href="{% url 'vacuna_detail' vacuna.pk %}">{{ vacuna.nombre }}</a></li>
+  {% empty %}
+    <li>No hay vacunas cargadas.</li>
+  {% endfor %}
+</ul>
+{% endblock %}

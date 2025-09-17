@@ -10,6 +10,10 @@ class GrupoEtarioForm(forms.ModelForm):
     class Meta:
         model = GrupoEtario
         fields = ['nombre', 'edad_min', 'edad_max']
+        labels = {
+            'edad_min': 'Edad mínima (meses)',
+            'edad_max': 'Edad máxima (meses)',
+        }
 
 class VacunaForm(forms.ModelForm):
     class Meta:

@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Mi página de Vacunas{% endblock %}</title>
     {% load static %}
+
+    <link rel="icon" type="image/png" href="{% static 'img/logo calendario.png' %}">
+
     <style>
     
        header {
@@ -65,11 +68,15 @@ nav a:hover {
             <a href="{% url 'crear_enfermedad' %}">Agregar Enfermedad</a>
             <a href="{% url 'crear_grupoetario' %}">Agregar Grupo Etario</a>
             <a href="{% url 'vacuna_create' %}">Agregar Vacuna</a>
-            <a href="{% url 'logout' %}">Logout</a>
+            <form method="post" action="{% url 'logout' %}" style="display:inline;">
+            {% csrf_token %}
+            <button type="submit" style="background:none;border:none;color:#333;cursor:pointer;padding:0;margin:0;font:inherit;">Logout</button>
+        </form>
     {% else %}
         <a href="{% url 'login' %}">Login</a>
     {% endif %}
             <a href="{% url 'buscar_vacuna' %}">Buscar Vacuna</a>
+            <a href="{% url 'about' %}">Acerca de mí</a>
         </nav>
     </header>
     <hr>
