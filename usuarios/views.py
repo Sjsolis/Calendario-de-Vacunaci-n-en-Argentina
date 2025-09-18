@@ -3,6 +3,8 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.decorators import login_required
 from .forms import RegistroForm
+from .forms import ProfileForm
+from .forms import AvatarForm
 
 def registro(request):
     if request.method == "POST":
@@ -34,3 +36,39 @@ def logout_usuario(request):
 def perfil(request):
     return render(request, 'usuarios/perfil.html')
 
+def editar_perfil(request):
+    profile = request.user.profile
+    if request.method == "POST":
+        form = ProfileForm(request.POST, request.FILES, instance=profile)
+        if form.is_valid():
+            form.save()
+            return redirect('inicio')
+    else:
+        form = ProfileForm(instance=profile)
+    return render(request, 'usuarios/editar_perfil.html', {'form': form})
+
+@login_required
+def editar_avatar(request):
+    perfil = request.user.profile
+    if request.method == "POST":
+        form = AvatarForm(request.POST, request.FILES, instance=perfil)
+        if form.is_valid():
+            form.save()
+            return redirect("perfil")  # redirigir a la vista del perfil
+    else:
+        form = AvatarForm(instance=perfil)
+    return render(request, "usuarios/editar_avatar.html", {"form": form})
+
+@login_required
+def editar_avatar(request):
+    perfil = request.user.profile  # ✅ instancia del modelo Profile
+
+    if request.method == 'POST':
+        form = AvatarForm(request.POST, request.FILES, instance=perfil)
+        if form.is_valid():
+            form.save()
+            return redirect('perfil')
+    else:
+        form = AvatarForm(instance=perfil)
+
+    return render(request, 'usuarios/editar_avatar.html', {'form': form})

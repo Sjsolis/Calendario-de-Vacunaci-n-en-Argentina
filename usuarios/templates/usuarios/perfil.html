@@ -1,6 +1,21 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
+
 {% block content %}
-<h2>Perfil de {{ request.user.username }}</h2>
-<p>Email: {{ request.user.email }}</p>
-<a href="{% url 'logout' %}">Cerrar sesión</a>
+<h2>Mi Perfil</h2>
+
+<div style="text-align: center; margin: 20px;">
+    {% if user.profile.avatar %}
+        <img src="{{ user.profile.avatar.url }}" alt="avatar" width="150" style="border-radius: 50%;">
+    {% else %}
+        <img src="{{ MEDIA_URL }}avatars/default.png" alt="avatar por defecto" width="150" style="border-radius: 50%;">
+    {% endif %}
+
+    <p><strong>Usuario:</strong> {{ user.username }}</p>
+    <p><strong>Email:</strong> {{ user.email }}</p>
+
+    <a href="{% url 'editar_avatar' %}">
+        <button type="button">Cambiar avatar</button>
+    </a>
+</div>
 {% endblock %}
+
